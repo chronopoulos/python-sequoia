@@ -8,7 +8,7 @@ static int Outport_init(Outport_Data *self, PyObject *args, PyObject *kwds) {
         return -1;
     }
 
-    sq_outport_init(&self->outport, name);
+    self->outport = sq_outport_new(name);
 
     return 0;
 
@@ -33,7 +33,7 @@ static PyObject *Outport_repr(Outport_Data *self, PyObject *unused) {
     PyObject *result = NULL;
     char result_str[96];
 
-    sprintf(result_str, "<sequoia out-port: %s>", self->outport.name);
+    sprintf(result_str, "<sequoia out-port: %s>", sq_outport_get_name(self->outport));
     result = PyUnicode_FromString(result_str);
 
     return result;
@@ -46,7 +46,7 @@ static PyObject *Outport_set_name(Outport_Data *self, PyObject *args) {
 
     PyArg_ParseTuple(args, "s", &name);
 
-    sq_outport_set_name(&self->outport, name);
+    sq_outport_set_name(self->outport, name);
 
     Py_RETURN_NONE;
 
@@ -56,7 +56,7 @@ static PyObject *Outport_get_name(Outport_Data *self, PyObject *unused) {
 
     PyObject *result = NULL;
 
-    result = PyString_FromString(sq_outport_get_name(&self->outport));
+    result = PyString_FromString(sq_outport_get_name(self->outport));
 
     return result;
 

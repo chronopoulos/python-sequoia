@@ -3,13 +3,12 @@
 static int Session_init(Session_Data *self, PyObject *args, PyObject *kwds) {
 
     char *name;
-    int tps;
 
-    if (!PyArg_ParseTuple(args, "si", &name, &tps)) {
+    if (!PyArg_ParseTuple(args, "s", &name)) {
         return -1;
     }
 
-    sq_session_init(&self->sesh, name, tps);
+    self->sesh = sq_session_new(name);
 
     return 0;
 
@@ -34,8 +33,8 @@ static PyObject *Session_repr(Session_Data * self, PyObject *unused) {
     PyObject *result = NULL;
     char result_str[96];
 
-    sprintf(result_str, "<sequoia session: '%s' with %d tps at %.3f bpm>",
-            sq_session_get_name(&self->sesh), self->sesh.tps, self->sesh.bpm);
+    sprintf(result_str, "<sequoia session: '%s' at %.3f bpm>",
+            sq_session_get_name(self->sesh), sq_session_get_bpm(self->sesh));
 
     result = PyUnicode_FromString(result_str);
 
@@ -51,7 +50,7 @@ static PyObject *Session_set_bpm(Session_Data *self, PyObject *args) {
         return NULL;
     }
 
-    sq_session_set_bpm(&self->sesh, bpm);
+    sq_session_set_bpm(self->sesh, bpm);
 
     Py_RETURN_NONE;
 
@@ -59,7 +58,7 @@ static PyObject *Session_set_bpm(Session_Data *self, PyObject *args) {
 
 static PyObject *Session_start(Session_Data *self, PyObject *unused) {
 
-    sq_session_start(&self->sesh);
+    sq_session_start(self->sesh);
 
     Py_RETURN_NONE;
 
@@ -67,7 +66,7 @@ static PyObject *Session_start(Session_Data *self, PyObject *unused) {
 
 static PyObject *Session_stop(Session_Data *self, PyObject *unused) {
 
-    sq_session_stop(&self->sesh);
+    sq_session_stop(self->sesh);
 
     Py_RETURN_NONE;
 
@@ -75,7 +74,7 @@ static PyObject *Session_stop(Session_Data *self, PyObject *unused) {
 
 static PyObject *Session_get_name(Session_Data *self, PyObject *unused) {
 
-    return PyString_FromString(sq_session_get_name(&self->sesh));
+    return PyString_FromString(sq_session_get_name(self->sesh));
 
 }
 
@@ -87,7 +86,7 @@ static PyObject *Session_register_outport(Session_Data *self, PyObject *args) {
         return NULL;
     }
 
-    sq_session_register_outport(&self->sesh, &((Outport_Data*)object)->outport);
+    sq_session_register_outport(self->sesh, ((Outport_Data*)object)->outport);
 
     Py_RETURN_NONE;
 
@@ -101,7 +100,7 @@ static PyObject *Session_add_sequence(Session_Data *self, PyObject *args) {
         return NULL;
     }
 
-    sq_session_add_sequence(&self->sesh, &((Sequence_Data*)object)->seq);
+    sq_session_add_sequence(self->sesh, ((Sequence_Data*)object)->seq);
 
     Py_RETURN_NONE;
 
@@ -115,25 +114,16 @@ static PyObject *Session_rm_sequence(Session_Data *self, PyObject *args) {
         return NULL;
     }
 
-    sq_session_rm_sequence(&self->sesh, &((Sequence_Data*)object)->seq);
+    sq_session_rm_sequence(self->sesh, ((Sequence_Data*)object)->seq);
 
     Py_RETURN_NONE;
-
-}
-
-static PyObject *Session_get_tps(Session_Data *self, PyObject *args) {
-
-    int result;
-    result = sq_session_get_tps(&self->sesh);
-
-    return PyInt_FromLong(result);
 
 }
 
 static PyObject *Session_get_bpm(Session_Data *self, PyObject *args) {
 
     int result;
-    result = sq_session_get_bpm(&self->sesh);
+    result = sq_session_get_bpm(self->sesh);
 
     return PyInt_FromLong(result);
 
@@ -148,7 +138,6 @@ static PyMethodDef Session_methods[] = {
     {"register_outport", (PyCFunction) Session_register_outport, METH_VARARGS, NULL},
     {"add_sequence", (PyCFunction) Session_add_sequence, METH_VARARGS, NULL},
     {"rm_sequence", (PyCFunction) Session_rm_sequence, METH_VARARGS, NULL},
-    {"get_tps", (PyCFunction) Session_get_tps, METH_VARARGS, NULL},
     {"get_bpm", (PyCFunction) Session_get_bpm, METH_VARARGS, NULL},
     {NULL}
 

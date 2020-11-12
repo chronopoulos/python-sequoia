@@ -2,7 +2,7 @@
 
 static int Trigger_init(Trigger_Data *self, PyObject *args, PyObject *kwds) {
 
-    sq_trigger_init(&self->trig);
+    self->trig = sq_trigger_new();
 
     return 0;
 
@@ -18,6 +18,7 @@ static PyObject *Trigger_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
 
 static void Trigger_del(Trigger_Data *self) {
 
+    sq_trigger_delete(self->trig);
     Py_TYPE(self)->tp_free((PyObject *) self);
 
 }
@@ -28,40 +29,85 @@ static PyObject *Trigger_repr(Trigger_Data *self, PyObject *unused) {
 
 }
 
-static PyObject *Trigger_set_null(Trigger_Data *self, PyObject *unused) {
+static PyObject *Trigger_set_type(Trigger_Data *self, PyObject *args) {
 
-    sq_trigger_set_null(&self->trig);
+    int type;
+
+    if (!PyArg_ParseTuple(args, "i", &type)) {
+        return NULL;
+    }
+
+    sq_trigger_set_type(self->trig, type);
 
     Py_RETURN_NONE;
 
 }
 
-static PyObject *Trigger_set_note(Trigger_Data *self, PyObject *args) {
+static PyObject *Trigger_set_note_value(Trigger_Data *self, PyObject *args) {
 
     int note;
-    int velocity;
-    float length;
 
-    if (!PyArg_ParseTuple(args, "iif", &note, &velocity, &length)) {
+    if (!PyArg_ParseTuple(args, "i", &note)) {
         return NULL;
     }
 
-    sq_trigger_set_note(&self->trig, note, velocity, length);
+    sq_trigger_set_note_value(self->trig, note);
 
     Py_RETURN_NONE;
 
 }
 
-static PyObject *Trigger_set_cc(Trigger_Data *self, PyObject *args) {
+static PyObject *Trigger_set_note_velocity(Trigger_Data *self, PyObject *args) {
 
-    int cc_number;
-    int cc_value;
+    int vel;
 
-    if (!PyArg_ParseTuple(args, "ii", &cc_number, &cc_value)) {
+    if (!PyArg_ParseTuple(args, "i", &vel)) {
         return NULL;
     }
 
-    sq_trigger_set_cc(&self->trig, cc_number, cc_value);
+    sq_trigger_set_note_velocity(self->trig, vel);
+
+    Py_RETURN_NONE;
+
+}
+
+static PyObject *Trigger_set_note_length(Trigger_Data *self, PyObject *args) {
+
+    float length;
+
+    if (!PyArg_ParseTuple(args, "f", &length)) {
+        return NULL;
+    }
+
+    sq_trigger_set_note_length(self->trig, length);
+
+    Py_RETURN_NONE;
+
+}
+
+static PyObject *Trigger_set_cc_number(Trigger_Data *self, PyObject *args) {
+
+    int cc_number;
+
+    if (!PyArg_ParseTuple(args, "i", &cc_number)) {
+        return NULL;
+    }
+
+    sq_trigger_set_cc_number(self->trig, cc_number);
+
+    Py_RETURN_NONE;
+
+}
+
+static PyObject *Trigger_set_cc_value(Trigger_Data *self, PyObject *args) {
+
+    int cc_value;
+
+    if (!PyArg_ParseTuple(args, "i", &cc_value)) {
+        return NULL;
+    }
+
+    sq_trigger_set_cc_value(self->trig, cc_value);
 
     Py_RETURN_NONE;
 
@@ -75,7 +121,7 @@ static PyObject *Trigger_set_probability(Trigger_Data *self, PyObject *args) {
         return NULL;
     }
 
-    sq_trigger_set_probability(&self->trig, probability);
+    sq_trigger_set_probability(self->trig, probability);
 
     Py_RETURN_NONE;
 
@@ -89,7 +135,21 @@ static PyObject *Trigger_set_microtime(Trigger_Data *self, PyObject *args) {
         return NULL;
     }
 
-    sq_trigger_set_microtime(&self->trig, microtime);
+    sq_trigger_set_microtime(self->trig, microtime);
+
+    Py_RETURN_NONE;
+
+}
+
+static PyObject *Trigger_set_channel(Trigger_Data *self, PyObject *args) {
+
+    int channel;
+
+    if (!PyArg_ParseTuple(args, "i", &channel)) {
+        return NULL;
+    }
+
+    sq_trigger_set_channel(self->trig, channel);
 
     Py_RETURN_NONE;
 
@@ -97,11 +157,15 @@ static PyObject *Trigger_set_microtime(Trigger_Data *self, PyObject *args) {
 
 static PyMethodDef Trigger_methods[] = {
 
-    {"set_null", (PyCFunction) Trigger_set_null, METH_NOARGS, NULL},
-    {"set_note", (PyCFunction) Trigger_set_note, METH_VARARGS, NULL},
-    {"set_cc", (PyCFunction) Trigger_set_cc, METH_VARARGS, NULL},
+    {"set_type", (PyCFunction) Trigger_set_type, METH_VARARGS, NULL},
+    {"set_note_value", (PyCFunction) Trigger_set_note_value, METH_VARARGS, NULL},
+    {"set_note_velocity", (PyCFunction) Trigger_set_note_velocity, METH_VARARGS, NULL},
+    {"set_note_length", (PyCFunction) Trigger_set_note_length, METH_VARARGS, NULL},
+    {"set_cc_number", (PyCFunction) Trigger_set_cc_number, METH_VARARGS, NULL},
+    {"set_cc_value", (PyCFunction) Trigger_set_cc_value, METH_VARARGS, NULL},
     {"set_probability", (PyCFunction) Trigger_set_probability, METH_VARARGS, NULL},
     {"set_microtime", (PyCFunction) Trigger_set_microtime, METH_VARARGS, NULL},
+    {"set_channel", (PyCFunction) Trigger_set_channel, METH_VARARGS, NULL},
     {NULL}
 
 };

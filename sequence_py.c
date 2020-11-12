@@ -2,13 +2,13 @@
 
 static int Sequence_init(Sequence_Data *self, PyObject *args, PyObject *kwds) {
 
-    int nsteps, tps;
+    int nsteps;
 
-    if (!PyArg_ParseTuple(args, "ii", &nsteps, &tps)) {
+    if (!PyArg_ParseTuple(args, "i", &nsteps)) {
         return -1;
     }
 
-    sq_sequence_init(&self->seq, nsteps, tps);
+    self->seq = sq_sequence_new(nsteps);
 
     return 0;
 
@@ -33,8 +33,8 @@ static PyObject *Sequence_repr(Sequence_Data *self, PyObject *unused) {
     PyObject *result = NULL;
     char result_str[96];
 
-    sprintf(result_str, "<sequoia sequence: '%s' with %d steps and %d tps>",
-            self->seq.name, self->seq.nsteps, self->seq.tps);
+    sprintf(result_str, "<sequoia sequence: '%s' with %d steps>",
+            sq_sequence_get_name(self->seq), sq_sequence_get_nsteps(self->seq));
 
     result = PyUnicode_FromString(result_str);
 
@@ -51,7 +51,7 @@ static PyObject *Sequence_set_name(Sequence_Data *self, PyObject *args) {
         return NULL;
     }
 
-    sq_sequence_set_name(&self->seq, name);
+    sq_sequence_set_name(self->seq, name);
 
     Py_RETURN_NONE;
 
@@ -65,7 +65,7 @@ static PyObject *Sequence_set_transpose(Sequence_Data *self, PyObject *args) {
         return NULL;
     }
 
-    sq_sequence_set_transpose(&self->seq, transpose);
+    sq_sequence_set_transpose(self->seq, transpose);
 
     Py_RETURN_NONE;
 
@@ -79,7 +79,7 @@ static PyObject *Sequence_set_playhead(Sequence_Data *self, PyObject *args) {
         return NULL;
     }
 
-    sq_sequence_set_transpose(&self->seq, ph);
+    sq_sequence_set_transpose(self->seq, ph);
 
     Py_RETURN_NONE;
 
@@ -93,7 +93,7 @@ static PyObject *Sequence_set_clockdivide(Sequence_Data *self, PyObject *args) {
         return NULL;
     }
 
-    sq_sequence_set_clockdivide(&self->seq, div);
+    sq_sequence_set_clockdivide(self->seq, div);
 
     Py_RETURN_NONE;
 
@@ -107,7 +107,7 @@ static PyObject *Sequence_set_mute(Sequence_Data *self, PyObject *args) {
         return NULL;
     }
 
-    sq_sequence_set_mute(&self->seq, mute);
+    sq_sequence_set_mute(self->seq, mute);
 
     Py_RETURN_NONE;
 
@@ -122,7 +122,7 @@ static PyObject *Sequence_set_trig(Sequence_Data *self, PyObject *args) {
         return NULL;
     }
 
-    sq_sequence_set_trig(&self->seq, stepIndex, &((Trigger_Data*)object)->trig);
+    sq_sequence_set_trig(self->seq, stepIndex, ((Trigger_Data*)object)->trig);
 
     Py_RETURN_NONE;
 
@@ -136,7 +136,7 @@ static PyObject *Sequence_clear_trig(Sequence_Data *self, PyObject *args) {
         return NULL;
     }
 
-    sq_sequence_clear_trig(&self->seq, stepIndex);
+    sq_sequence_clear_trig(self->seq, stepIndex);
 
     Py_RETURN_NONE;
 
@@ -150,7 +150,7 @@ static PyObject *Sequence_set_outport(Sequence_Data *self, PyObject *args) {
         return NULL;
     }
 
-    sq_sequence_set_outport(&self->seq, &((Outport_Data*)object)->outport);
+    sq_sequence_set_outport(self->seq, ((Outport_Data*)object)->outport);
 
     Py_RETURN_NONE;
 
@@ -158,7 +158,7 @@ static PyObject *Sequence_set_outport(Sequence_Data *self, PyObject *args) {
 
 static PyObject *Sequence_pprint(Sequence_Data *self, PyObject *args) {
 
-    sq_sequence_pprint(&self->seq);
+    sq_sequence_pprint(self->seq);
 
     Py_RETURN_NONE;
 
@@ -167,7 +167,7 @@ static PyObject *Sequence_pprint(Sequence_Data *self, PyObject *args) {
 static PyObject *Sequence_get_nsteps(Sequence_Data *self, PyObject *args) {
 
     int result;
-    result = sq_sequence_get_nsteps(&self->seq);
+    result = sq_sequence_get_nsteps(self->seq);
 
     return PyInt_FromLong(result);
 

@@ -8,7 +8,7 @@ static int Inport_init(Inport_Data *self, PyObject *args, PyObject *kwds) {
         return -1;
     }
 
-    sq_inport_init(&self->inport, name);
+    self->inport = sq_inport_new(name);
 
     return 0;
 
@@ -33,7 +33,7 @@ static PyObject *Inport_repr(Inport_Data *self, PyObject *unused) {
     PyObject *result = NULL;
     char result_str[96];
 
-    sprintf(result_str, "<sequoia in-port: %s>", self->inport.name);
+    sprintf(result_str, "<sequoia in-port: %s>", sq_inport_get_name(self->inport));
     result = PyUnicode_FromString(result_str);
 
     return result;
@@ -46,7 +46,7 @@ static PyObject *Inport_set_name(Inport_Data *self, PyObject *args) {
 
     PyArg_ParseTuple(args, "s", &name);
 
-    sq_inport_set_name(&self->inport, name);
+    sq_inport_set_name(self->inport, name);
 
     Py_RETURN_NONE;
 
@@ -58,7 +58,7 @@ static PyObject *Inport_set_type(Inport_Data *self, PyObject *args) {
 
     PyArg_ParseTuple(args, "i", &type);
 
-    sq_inport_set_type(&self->inport, type);
+    sq_inport_set_type(self->inport, type);
 
     Py_RETURN_NONE;
 
