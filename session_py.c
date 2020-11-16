@@ -202,7 +202,6 @@ static PyMethodDef Session_methods[] = {
     {"get_noutports", (PyCFunction) Session_get_noutports, METH_VARARGS, NULL},
 //    {"get_outport", (PyCFunction) Session_get_outport, METH_VARARGS, NULL},
     {"save", (PyCFunction) Session_save, METH_VARARGS, NULL},
-//    {"load", (PyCFunction) Session_load, METH_VARARGS, NULL},
     {NULL}
 
 };

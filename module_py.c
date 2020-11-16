@@ -7,13 +7,36 @@ static struct PyModuleDef moduledef = {
    "sequoia",         /* m_name */
    NULL,              /* m_doc */
    -1,                /* m_size */
-   NULL,     /* m_methods */
+   NULL,              /* m_methods (PyMethodDef*) */
    NULL,              /* m_reload */
    NULL,              /* m_traverse */
    NULL,              /* m_clear */
    NULL,              /* m_free */
 };
 #endif
+
+static PyObject* Module_load(PyObject *self, PyObject *args) {
+
+    printf("testing testing\n");
+
+    char *name;
+    if (!PyArg_ParseTuple(args, "s", &name)) {
+        return NULL;
+    }
+
+    Session_Data *session_data;
+    session_data = (Session_Data *) Session_Type.tp_alloc(&Session_Type, 0);
+    session_data->sesh = sq_session_load(name);
+    return (PyObject *) session_data;
+
+}
+
+static PyMethodDef ModuleMethods[] =
+{
+    {"load", Module_load, METH_VARARGS, "load from .sqa file"},
+    {0, 0},
+};
+
 
 static PyObject *initsequoia_worker(void) {
 
@@ -62,7 +85,7 @@ static PyObject *initsequoia_worker(void) {
 #if PY_MAJOR_VERSION >= 3
     m = PyModule_Create(&moduledef);
 #else
-    m = Py_InitModule3 ("sequoia", NULL, NULL);
+    m = Py_InitModule("sequoia", ModuleMethods);
 #endif
 
     Py_INCREF (&Session_Type);
@@ -85,15 +108,17 @@ static PyObject *initsequoia_worker(void) {
 }
 
 #if PY_MAJOR_VERSION >= 3
-    // Python3 init
-    PyMODINIT_FUNC PyInit_sequoia(void)
-    {
-        return initsequoia_worker();
-    }
+
+// Python3 init
+PyMODINIT_FUNC PyInit_sequoia(void) {
+    return initsequoia_worker();
+}
+
 #else
-    // Python 2 init
-    PyMODINIT_FUNC initsequoia(void)
-    {
-        initsequoia_worker();
-    }
+
+// Python 2 init
+PyMODINIT_FUNC initsequoia(void) {
+    initsequoia_worker();
+}
+
 #endif
