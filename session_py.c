@@ -170,17 +170,17 @@ static PyObject *Session_get_noutports(Session_Data *self, PyObject *args) {
 
 }
 
-static int Session_save(Session_Data *self, PyObject *args) {
+static PyObject *Session_save(Session_Data *self, PyObject *args) {
 
     char *filename;
 
     if (!PyArg_ParseTuple(args, "s", &filename)) {
-        return -1;
+        return NULL;
     }
 
     sq_session_save(self->sesh, filename);
 
-    return 0;
+    Py_RETURN_NONE;
 
 }
 
