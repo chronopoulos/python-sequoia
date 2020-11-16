@@ -28,7 +28,7 @@ static void Session_del(Session_Data *self) {
 
 }
 
-static PyObject *Session_repr(Session_Data * self, PyObject *unused) {
+static PyObject *Session_repr(Session_Data *self, PyObject *unused) {
 
     PyObject *result = NULL;
     char result_str[96];
@@ -92,6 +92,20 @@ static PyObject *Session_register_outport(Session_Data *self, PyObject *args) {
 
 }
 
+static PyObject *Session_register_inport(Session_Data *self, PyObject *args) {
+
+    PyObject *object;
+
+    if (!PyArg_ParseTuple(args, "O", &object)) {
+        return NULL;
+    }
+
+    sq_session_register_inport(self->sesh, ((Inport_Data*)object)->inport);
+
+    Py_RETURN_NONE;
+
+}
+
 static PyObject *Session_add_sequence(Session_Data *self, PyObject *args) {
 
     PyObject *object;
@@ -129,16 +143,66 @@ static PyObject *Session_get_bpm(Session_Data *self, PyObject *args) {
 
 }
 
+static PyObject *Session_get_nseqs(Session_Data *self, PyObject *args) {
+
+    int result;
+    result = sq_session_get_nseqs(self->sesh);
+
+    return PyInt_FromLong(result);
+
+}
+
+static PyObject *Session_get_ninports(Session_Data *self, PyObject *args) {
+
+    int result;
+    result = sq_session_get_ninports(self->sesh);
+
+    return PyInt_FromLong(result);
+
+}
+
+static PyObject *Session_get_noutports(Session_Data *self, PyObject *args) {
+
+    int result;
+    result = sq_session_get_noutports(self->sesh);
+
+    return PyInt_FromLong(result);
+
+}
+
+static int Session_save(Session_Data *self, PyObject *args) {
+
+    char *filename;
+
+    if (!PyArg_ParseTuple(args, "s", &filename)) {
+        return -1;
+    }
+
+    sq_session_save(self->sesh, filename);
+
+    return 0;
+
+}
+
 static PyMethodDef Session_methods[] = {
 
-    {"set_bpm", (PyCFunction) Session_set_bpm, METH_VARARGS, NULL},
-    {"start", (PyCFunction) Session_start, METH_NOARGS, NULL},
-    {"stop", (PyCFunction) Session_stop, METH_NOARGS, NULL},
-    {"get_name", (PyCFunction) Session_get_name, METH_NOARGS, NULL},
     {"register_outport", (PyCFunction) Session_register_outport, METH_VARARGS, NULL},
+    {"register_inport", (PyCFunction) Session_register_inport, METH_VARARGS, NULL},
     {"add_sequence", (PyCFunction) Session_add_sequence, METH_VARARGS, NULL},
     {"rm_sequence", (PyCFunction) Session_rm_sequence, METH_VARARGS, NULL},
+    {"start", (PyCFunction) Session_start, METH_NOARGS, NULL},
+    {"stop", (PyCFunction) Session_stop, METH_NOARGS, NULL},
+    {"set_bpm", (PyCFunction) Session_set_bpm, METH_VARARGS, NULL},
+    {"get_name", (PyCFunction) Session_get_name, METH_NOARGS, NULL},
     {"get_bpm", (PyCFunction) Session_get_bpm, METH_VARARGS, NULL},
+    {"get_nseqs", (PyCFunction) Session_get_nseqs, METH_VARARGS, NULL},
+//    {"get_seq", (PyCFunction) Session_get_seq, METH_VARARGS, NULL},
+    {"get_ninports", (PyCFunction) Session_get_ninports, METH_VARARGS, NULL},
+//    {"get_inport", (PyCFunction) Session_get_inport, METH_VARARGS, NULL},
+    {"get_noutports", (PyCFunction) Session_get_noutports, METH_VARARGS, NULL},
+//    {"get_outport", (PyCFunction) Session_get_outport, METH_VARARGS, NULL},
+    {"save", (PyCFunction) Session_save, METH_VARARGS, NULL},
+//    {"load", (PyCFunction) Session_load, METH_VARARGS, NULL},
     {NULL}
 
 };
