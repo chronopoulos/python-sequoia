@@ -1,4 +1,5 @@
-PYTHON = python
+#PYTHON = python2
+PYTHON = python3
 
 # inputs
 

@@ -1,3 +1,6 @@
+#ifndef TYPES_PY_H
+#define TYPES_PY_H
+
 #include <Python.h>
 
 #include <sequoia.h>
@@ -48,3 +51,4 @@ extern PyTypeObject Trigger_Type;
 extern PyTypeObject Outport_Type;
 extern PyTypeObject Inport_Type;
 
+#endif

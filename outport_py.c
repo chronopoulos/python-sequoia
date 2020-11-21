@@ -1,4 +1,5 @@
 #include "types_py.h"
+#include "defs.h"
 
 static int Outport_init(Outport_Data *self, PyObject *args, PyObject *kwds) {
 
@@ -56,7 +57,7 @@ static PyObject *Outport_get_name(Outport_Data *self, PyObject *unused) {
 
     PyObject *result = NULL;
 
-    result = PyString_FromString(sq_outport_get_name(self->outport));
+    result = DEF_STRING(sq_outport_get_name(self->outport));
 
     return result;
 

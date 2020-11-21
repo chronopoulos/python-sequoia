@@ -1,4 +1,5 @@
 #include "types_py.h"
+#include "defs.h"
 
 static int Sequence_init(Sequence_Data *self, PyObject *args, PyObject *kwds) {
 
@@ -169,7 +170,7 @@ static PyObject *Sequence_get_nsteps(Sequence_Data *self, PyObject *args) {
     int result;
     result = sq_sequence_get_nsteps(self->seq);
 
-    return PyInt_FromLong(result);
+    return DEF_LONG(result);
 
 }
 

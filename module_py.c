@@ -1,19 +1,5 @@
 #include "types_py.h"
-
-#if PY_MAJOR_VERSION >= 3
-// Python3 module definition
-static struct PyModuleDef moduledef = {
-   PyModuleDef_HEAD_INIT,
-   "sequoia",         /* m_name */
-   NULL,              /* m_doc */
-   -1,                /* m_size */
-   NULL,              /* m_methods (PyMethodDef*) */
-   NULL,              /* m_reload */
-   NULL,              /* m_traverse */
-   NULL,              /* m_clear */
-   NULL,              /* m_free */
-};
-#endif
+#include "defs.h"
 
 static PyObject* Module_load(PyObject *self, PyObject *args) {
 
@@ -65,24 +51,36 @@ static PyObject *initsequoia_worker(void) {
     if (PyType_Ready(&Inport_Type) < 0) {
         return m;
     }
-    PyDict_SetItem(Inport_Type.tp_dict, PyString_FromString("NONE"),
-                    PyInt_FromLong(INPORT_NONE));
-    PyDict_SetItem(Inport_Type.tp_dict, PyString_FromString("TRANSPOSE"),
-                    PyInt_FromLong(INPORT_TRANSPOSE));
-    PyDict_SetItem(Inport_Type.tp_dict, PyString_FromString("PLAYHEAD"),
-                    PyInt_FromLong(INPORT_PLAYHEAD));
-    PyDict_SetItem(Inport_Type.tp_dict, PyString_FromString("CLOCKDIVIDE"),
-                    PyInt_FromLong(INPORT_CLOCKDIVIDE));
-    PyDict_SetItem(Inport_Type.tp_dict, PyString_FromString("DIRECTION"),
-                    PyInt_FromLong(INPORT_DIRECTION));
-    PyDict_SetItem(Inport_Type.tp_dict, PyString_FromString("MUTE"),
-                    PyInt_FromLong(INPORT_MUTE));
-    PyDict_SetItem(Inport_Type.tp_dict, PyString_FromString("FIRST"),
-                    PyInt_FromLong(INPORT_FIRST));
-    PyDict_SetItem(Inport_Type.tp_dict, PyString_FromString("LAST"),
-                    PyInt_FromLong(INPORT_LAST));
+
+    PyDict_SetItem(Inport_Type.tp_dict, DEF_STRING("NONE"),
+                    DEF_LONG(INPORT_NONE));
+    PyDict_SetItem(Inport_Type.tp_dict, DEF_STRING("TRANSPOSE"),
+                    DEF_LONG(INPORT_TRANSPOSE));
+    PyDict_SetItem(Inport_Type.tp_dict, DEF_STRING("PLAYHEAD"),
+                    DEF_LONG(INPORT_PLAYHEAD));
+    PyDict_SetItem(Inport_Type.tp_dict, DEF_STRING("CLOCKDIVIDE"),
+                    DEF_LONG(INPORT_CLOCKDIVIDE));
+    PyDict_SetItem(Inport_Type.tp_dict, DEF_STRING("DIRECTION"),
+                    DEF_LONG(INPORT_DIRECTION));
+    PyDict_SetItem(Inport_Type.tp_dict, DEF_STRING("MUTE"),
+                    DEF_LONG(INPORT_MUTE));
+    PyDict_SetItem(Inport_Type.tp_dict, DEF_STRING("FIRST"),
+                    DEF_LONG(INPORT_FIRST));
+    PyDict_SetItem(Inport_Type.tp_dict, DEF_STRING("LAST"),
+                    DEF_LONG(INPORT_LAST));
 
 #if PY_MAJOR_VERSION >= 3
+    static struct PyModuleDef moduledef = {
+       PyModuleDef_HEAD_INIT,
+       "sequoia",         /* m_name */
+       NULL,              /* m_doc */
+       -1,                /* m_size */
+       ModuleMethods,     /* m_methods (PyMethodDef*) */
+       NULL,              /* m_reload */
+       NULL,              /* m_traverse */
+       NULL,              /* m_clear */
+       NULL,              /* m_free */
+    };
     m = PyModule_Create(&moduledef);
 #else
     m = Py_InitModule("sequoia", ModuleMethods);
@@ -108,17 +106,11 @@ static PyObject *initsequoia_worker(void) {
 }
 
 #if PY_MAJOR_VERSION >= 3
-
-// Python3 init
 PyMODINIT_FUNC PyInit_sequoia(void) {
     return initsequoia_worker();
 }
-
 #else
-
-// Python 2 init
 PyMODINIT_FUNC initsequoia(void) {
     initsequoia_worker();
 }
-
 #endif

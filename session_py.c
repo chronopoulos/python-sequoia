@@ -1,4 +1,5 @@
 #include "types_py.h"
+#include "defs.h"
 
 static int Session_init(Session_Data *self, PyObject *args, PyObject *kwds) {
 
@@ -74,7 +75,7 @@ static PyObject *Session_stop(Session_Data *self, PyObject *unused) {
 
 static PyObject *Session_get_name(Session_Data *self, PyObject *unused) {
 
-    return PyString_FromString(sq_session_get_name(self->sesh));
+    return DEF_STRING(sq_session_get_name(self->sesh));
 
 }
 
@@ -139,7 +140,7 @@ static PyObject *Session_get_bpm(Session_Data *self, PyObject *args) {
     int result;
     result = sq_session_get_bpm(self->sesh);
 
-    return PyInt_FromLong(result);
+    return DEF_LONG(result);
 
 }
 
@@ -148,7 +149,7 @@ static PyObject *Session_get_nseqs(Session_Data *self, PyObject *args) {
     int result;
     result = sq_session_get_nseqs(self->sesh);
 
-    return PyInt_FromLong(result);
+    return DEF_LONG(result);
 
 }
 
@@ -157,7 +158,7 @@ static PyObject *Session_get_ninports(Session_Data *self, PyObject *args) {
     int result;
     result = sq_session_get_ninports(self->sesh);
 
-    return PyInt_FromLong(result);
+    return DEF_LONG(result);
 
 }
 
@@ -166,7 +167,7 @@ static PyObject *Session_get_noutports(Session_Data *self, PyObject *args) {
     int result;
     result = sq_session_get_noutports(self->sesh);
 
-    return PyInt_FromLong(result);
+    return DEF_LONG(result);
 
 }
 
