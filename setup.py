@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 from distutils.core import setup, Extension
 
 pysequoia_sources = ['module_py.c', 'session_py.c', 'sequence_py.c',
