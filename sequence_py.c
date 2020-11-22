@@ -1,4 +1,5 @@
 #include "types_py.h"
+#include "structmember.h"
 #include "defs.h"
 
 static int Sequence_init(Sequence_Data *self, PyObject *args, PyObject *kwds) {
@@ -45,73 +46,136 @@ static PyObject *Sequence_repr(Sequence_Data *self, PyObject *unused) {
 
 }
 
-static PyObject *Sequence_set_name(Sequence_Data *self, PyObject *args) {
+static PyObject* Sequence_get_name(Sequence_Data *self, void *closure) {
 
-    char *name;
+    return DEF_STRING(sq_sequence_get_name(self->seq));
 
-    if (!PyArg_ParseTuple(args, "s", &name)) {
-        return NULL;
+}
+
+static int Sequence_set_name(Sequence_Data *self, PyObject *value, void *closure) {
+
+    const char *name = PyUnicode_AsUTF8(value);
+    if (PyErr_Occurred()) {
+        return -1;
     }
 
     sq_sequence_set_name(self->seq, name);
 
-    Py_RETURN_NONE;
+    return 0;
 
 }
 
-static PyObject *Sequence_set_transpose(Sequence_Data *self, PyObject *args) {
+static PyObject* Sequence_get_transpose(Sequence_Data *self, void *closure) {
 
-    int transpose;
+    return DEF_LONG(sq_sequence_get_transpose(self->seq));
 
-    if (!PyArg_ParseTuple(args, "i", &transpose)) {
-        return NULL;
+}
+
+static int Sequence_set_transpose(Sequence_Data *self, PyObject *value, void *closure) {
+
+    int transpose = PyLong_AsLong(value);
+    if (PyErr_Occurred()) {
+        return -1;
     }
 
     sq_sequence_set_transpose(self->seq, transpose);
 
-    Py_RETURN_NONE;
+    return 0;
 
 }
 
-static PyObject *Sequence_set_playhead(Sequence_Data *self, PyObject *args) {
+static PyObject* Sequence_get_playhead(Sequence_Data *self, void *closure) {
 
-    int ph;
+    return DEF_LONG(sq_sequence_get_playhead(self->seq));
 
-    if (!PyArg_ParseTuple(args, "i", &ph)) {
-        return NULL;
+}
+
+static int Sequence_set_playhead(Sequence_Data *self, PyObject *value, void *closure) {
+
+    int ph = PyLong_AsLong(value);
+    if (PyErr_Occurred()) {
+        return -1;
     }
 
-    sq_sequence_set_transpose(self->seq, ph);
+    sq_sequence_set_playhead(self->seq, ph);
 
-    Py_RETURN_NONE;
+    return 0;
 
 }
 
-static PyObject *Sequence_set_clockdivide(Sequence_Data *self, PyObject *args) {
+static PyObject* Sequence_get_clockdivide(Sequence_Data *self, void *closure) {
 
-    int div;
+    return DEF_LONG(sq_sequence_get_clockdivide(self->seq));
 
-    if (!PyArg_ParseTuple(args, "i", &div)) {
-        return NULL;
+}
+
+static int Sequence_set_clockdivide(Sequence_Data *self, PyObject *value, void *closure) {
+
+    int clockdivide = PyLong_AsLong(value);
+    if (PyErr_Occurred()) {
+        return -1;
     }
 
-    sq_sequence_set_clockdivide(self->seq, div);
+    sq_sequence_set_clockdivide(self->seq, clockdivide);
 
-    Py_RETURN_NONE;
+    return 0;
 
 }
 
-static PyObject *Sequence_set_mute(Sequence_Data *self, PyObject *args) {
+static PyObject* Sequence_get_mute(Sequence_Data *self, void *closure) {
 
-    bool mute;
+    return PyBool_FromLong(sq_sequence_get_mute(self->seq));
 
-    if (!PyArg_ParseTuple(args, "b", &mute)) {
-        return NULL;
+}
+
+static int Sequence_set_mute(Sequence_Data *self, PyObject *value, void *closure) {
+
+    bool mute = PyObject_IsTrue(value);
+    if (PyErr_Occurred()) {
+        return -1;
     }
 
     sq_sequence_set_mute(self->seq, mute);
 
-    Py_RETURN_NONE;
+    return 0;
+
+}
+
+static PyObject* Sequence_get_first(Sequence_Data *self, void *closure) {
+
+    return DEF_LONG(sq_sequence_get_first(self->seq));
+
+}
+
+static int Sequence_set_first(Sequence_Data *self, PyObject *value, void *closure) {
+
+    int first = PyLong_AsLong(value);
+    if (PyErr_Occurred()) {
+        return -1;
+    }
+
+    sq_sequence_set_first(self->seq, first);
+
+    return 0;
+
+}
+
+static PyObject* Sequence_get_last(Sequence_Data *self, void *closure) {
+
+    return DEF_LONG(sq_sequence_get_last(self->seq));
+
+}
+
+static int Sequence_set_last(Sequence_Data *self, PyObject *value, void *closure) {
+
+    int last = PyLong_AsLong(value);
+    if (PyErr_Occurred()) {
+        return -1;
+    }
+
+    sq_sequence_set_last(self->seq, last);
+
+    return 0;
 
 }
 
@@ -177,12 +241,7 @@ static PyObject *Sequence_get_nsteps(Sequence_Data *self, PyObject *args) {
 
 static PyMethodDef Sequence_methods[] = {
 
-    {"set_name", (PyCFunction) Sequence_set_name, METH_VARARGS, NULL},
     {"set_outport", (PyCFunction) Sequence_set_outport, METH_VARARGS, NULL},
-    {"set_transpose", (PyCFunction) Sequence_set_transpose, METH_VARARGS, NULL},
-    {"set_playhead", (PyCFunction) Sequence_set_playhead, METH_VARARGS, NULL},
-    {"set_clockdivide", (PyCFunction) Sequence_set_clockdivide, METH_VARARGS, NULL},
-    {"set_mute", (PyCFunction) Sequence_set_mute, METH_VARARGS, NULL},
     {"set_trig", (PyCFunction) Sequence_set_trig, METH_VARARGS, NULL},
     {"clear_trig", (PyCFunction) Sequence_clear_trig, METH_VARARGS, NULL},
     {"pprint", (PyCFunction) Sequence_pprint, METH_NOARGS, NULL},
@@ -191,17 +250,32 @@ static PyMethodDef Sequence_methods[] = {
 
 };
 
+static PyMemberDef Sequence_members[] = {
+    {NULL}
+};
+
+static PyGetSetDef Sequence_getset[] = {
+    {"name", (getter) Sequence_get_name, (setter) Sequence_set_name, NULL, NULL},
+    {"transpose", (getter) Sequence_get_transpose, (setter) Sequence_set_transpose, NULL, NULL},
+    {"playhead", (getter) Sequence_get_playhead, (setter) Sequence_set_playhead, NULL, NULL},
+    {"clockdivide", (getter) Sequence_get_clockdivide, (setter) Sequence_set_clockdivide, NULL, NULL},
+    {"mute", (getter) Sequence_get_mute, (setter) Sequence_set_mute, NULL, NULL},
+    {"first", (getter) Sequence_get_first, (setter) Sequence_set_first, NULL, NULL},
+    {"last", (getter) Sequence_get_last, (setter) Sequence_set_last, NULL, NULL},
+    {NULL}
+};
+
 PyTypeObject Sequence_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "sequoia.sequence",                 /* tp_name           */
-    sizeof (Sequence_Data),             /* tp_basicsize      */
+    "sequoia.sequence",           /* tp_name           */
+    sizeof (Sequence_Data),       /* tp_basicsize      */
     0,                            /* tp_itemsize       */
-    (destructor) Sequence_del,     /* tp_dealloc        */
+    (destructor) Sequence_del,    /* tp_dealloc        */
     0,                            /* tp_print          */
     0,                            /* tp_getattr        */
     0,                            /* tp_setattr        */
     0,                            /* tp_compare        */
-    (reprfunc) Sequence_repr,      /* tp_repr           */
+    (reprfunc) Sequence_repr,     /* tp_repr           */
     0,                            /* tp_as_number      */
     0, //&Py_cvec_tp_as_sequence, /* tp_as_sequence    */
     0,                            /* tp_as_mapping     */
@@ -215,7 +289,7 @@ PyTypeObject Sequence_Type = {
 
     // TODO
     //Sequence_doc,                  /* tp_doc            */
-    0,                  /* tp_doc            */
+    0,                            /* tp_doc            */
 
     0,                            /* tp_traverse       */
     0,                            /* tp_clear          */
@@ -225,20 +299,18 @@ PyTypeObject Sequence_Type = {
     0,                            /* tp_iternext       */
 
     // TODO
-    Sequence_methods,              /* tp_methods        */
-    //Sequence_members,              /* tp_members        */
-    //Sequence_getseters,            /* tp_getset         */
-    0,              /* tp_members        */
-    0,            /* tp_getset         */
+    Sequence_methods,             /* tp_methods        */
+    Sequence_members,             /* tp_members        */
+    Sequence_getset,              /* tp_getset         */
 
     0,                            /* tp_base           */
     0,                            /* tp_dict           */
     0,                            /* tp_descr_get      */
     0,                            /* tp_descr_set      */
     0,                            /* tp_dictoffset     */
-    (initproc) Sequence_init,      /* tp_init           */
+    (initproc) Sequence_init,     /* tp_init           */
     0,                            /* tp_alloc          */
-    Sequence_new,                  /* tp_new            */
+    Sequence_new,                 /* tp_new            */
     0,
     0,
     0,
