@@ -25,6 +25,7 @@ static PyObject *Outport_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
 
 static void Outport_del(Outport_Data *self) {
 
+    sq_outport_delete(self->outport);
     Py_TYPE(self)->tp_free((PyObject *) self);
 
 }

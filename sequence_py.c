@@ -25,6 +25,7 @@ static PyObject *Sequence_new(PyTypeObject *type, PyObject *args, PyObject *kwds
 
 static void Sequence_del(Sequence_Data *self) {
 
+    sq_sequence_delete(self->seq);
     Py_TYPE(self)->tp_free((PyObject *) self);
 
 }

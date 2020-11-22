@@ -25,6 +25,7 @@ static PyObject *Session_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
 
 static void Session_del(Session_Data *self) {
 
+    sq_session_delete(self->sesh);
     Py_TYPE(self)->tp_free((PyObject *) self);
 
 }

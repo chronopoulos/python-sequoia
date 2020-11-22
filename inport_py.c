@@ -24,6 +24,7 @@ static PyObject *Inport_new(PyTypeObject *type, PyObject *args, PyObject *kwds) 
 
 static void Inport_del(Inport_Data *self) {
 
+    sq_inport_delete(self->inport);
     Py_TYPE(self)->tp_free((PyObject *) self);
 
 }
