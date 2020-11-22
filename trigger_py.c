@@ -1,4 +1,6 @@
 #include "types_py.h"
+#include "structmember.h"
+#include "defs.h"
 
 static int Trigger_init(Trigger_Data *self, PyObject *args, PyObject *kwds) {
 
@@ -29,145 +31,214 @@ static PyObject *Trigger_repr(Trigger_Data *self, PyObject *unused) {
 
 }
 
-static PyObject *Trigger_set_type(Trigger_Data *self, PyObject *args) {
+static PyObject* Trigger_get_type(Trigger_Data *self, void *closure) {
 
-    int type;
+    return DEF_LONG(sq_trigger_get_type(self->trig));
 
-    if (!PyArg_ParseTuple(args, "i", &type)) {
-        return NULL;
+}
+
+static int Trigger_set_type(Trigger_Data *self, PyObject *value, void *closure) {
+
+    int type = PyLong_AsLong(value);
+    if (PyErr_Occurred()) {
+        return -1;
     }
+
+    // TODO constrain to enum TRIG_TYPE
 
     sq_trigger_set_type(self->trig, type);
 
-    Py_RETURN_NONE;
+    return 0;
 
 }
 
-static PyObject *Trigger_set_note_value(Trigger_Data *self, PyObject *args) {
+static PyObject* Trigger_get_note_value(Trigger_Data *self, void *closure) {
 
-    int note;
-
-    if (!PyArg_ParseTuple(args, "i", &note)) {
-        return NULL;
-    }
-
-    sq_trigger_set_note_value(self->trig, note);
-
-    Py_RETURN_NONE;
+    return DEF_LONG(sq_trigger_get_note_value(self->trig));
 
 }
 
-static PyObject *Trigger_set_note_velocity(Trigger_Data *self, PyObject *args) {
+static int Trigger_set_note_value(Trigger_Data *self, PyObject *value, void *closure) {
 
-    int vel;
-
-    if (!PyArg_ParseTuple(args, "i", &vel)) {
-        return NULL;
+    int note_value = PyLong_AsLong(value);
+    if (PyErr_Occurred()) {
+        return -1;
     }
 
-    sq_trigger_set_note_velocity(self->trig, vel);
+    if (note_value < 0) {
+        PyErr_SetString(PyExc_ValueError, "note_value must be positive");
+        return -1;
+    }
 
-    Py_RETURN_NONE;
+    sq_trigger_set_note_value(self->trig, note_value);
+
+    return 0;
 
 }
 
-static PyObject *Trigger_set_note_length(Trigger_Data *self, PyObject *args) {
+static PyObject* Trigger_get_note_velocity(Trigger_Data *self, void *closure) {
 
-    float length;
-
-    if (!PyArg_ParseTuple(args, "f", &length)) {
-        return NULL;
-    }
-
-    sq_trigger_set_note_length(self->trig, length);
-
-    Py_RETURN_NONE;
+    return DEF_LONG(sq_trigger_get_note_velocity(self->trig));
 
 }
 
-static PyObject *Trigger_set_cc_number(Trigger_Data *self, PyObject *args) {
+static int Trigger_set_note_velocity(Trigger_Data *self, PyObject *value, void *closure) {
 
-    int cc_number;
-
-    if (!PyArg_ParseTuple(args, "i", &cc_number)) {
-        return NULL;
+    int note_velocity = PyLong_AsLong(value);
+    if (PyErr_Occurred()) {
+        return -1;
     }
+
+    if (note_velocity < 0) {
+        PyErr_SetString(PyExc_ValueError, "note_velocity must be positive");
+        return -1;
+    }
+
+    sq_trigger_set_note_velocity(self->trig, note_velocity);
+
+    return 0;
+
+}
+
+static PyObject* Trigger_get_note_length(Trigger_Data *self, void *closure) {
+
+    return PyFloat_FromDouble(sq_trigger_get_note_length(self->trig));
+
+}
+
+static int Trigger_set_note_length(Trigger_Data *self, PyObject *value, void *closure) {
+
+    int note_length = PyFloat_AsDouble(value);
+    if (PyErr_Occurred()) {
+        return -1;
+    }
+
+    // TODO constrain value
+
+    sq_trigger_set_note_length(self->trig, note_length);
+
+    return 0;
+
+}
+
+static PyObject* Trigger_get_cc_number(Trigger_Data *self, void *closure) {
+
+    return DEF_LONG(sq_trigger_get_cc_number(self->trig));
+
+}
+
+static int Trigger_set_cc_number(Trigger_Data *self, PyObject *value, void *closure) {
+
+    int cc_number = PyLong_AsLong(value);
+    if (PyErr_Occurred()) {
+        return -1;
+    }
+
+    // TODO constrain value
 
     sq_trigger_set_cc_number(self->trig, cc_number);
 
-    Py_RETURN_NONE;
+    return 0;
 
 }
 
-static PyObject *Trigger_set_cc_value(Trigger_Data *self, PyObject *args) {
+static PyObject* Trigger_get_cc_value(Trigger_Data *self, void *closure) {
 
-    int cc_value;
+    return DEF_LONG(sq_trigger_get_cc_value(self->trig));
 
-    if (!PyArg_ParseTuple(args, "i", &cc_value)) {
-        return NULL;
+}
+
+static int Trigger_set_cc_value(Trigger_Data *self, PyObject *value, void *closure) {
+
+    int cc_value = PyLong_AsLong(value);
+    if (PyErr_Occurred()) {
+        return -1;
     }
+
+    // TODO constrain value
 
     sq_trigger_set_cc_value(self->trig, cc_value);
 
-    Py_RETURN_NONE;
+    return 0;
 
 }
 
-static PyObject *Trigger_set_probability(Trigger_Data *self, PyObject *args) {
+static PyObject* Trigger_get_probability(Trigger_Data *self, void *closure) {
 
-    float probability;
+    return PyFloat_FromDouble(sq_trigger_get_probability(self->trig));
 
-    if (!PyArg_ParseTuple(args, "f", &probability)) {
-        return NULL;
+}
+
+static int Trigger_set_probability(Trigger_Data *self, PyObject *value, void *closure) {
+
+    float probability = PyFloat_AsDouble(value);
+    if (PyErr_Occurred()) {
+        return -1;
     }
 
     sq_trigger_set_probability(self->trig, probability);
 
-    Py_RETURN_NONE;
+    return 0;
 
 }
 
-static PyObject *Trigger_set_microtime(Trigger_Data *self, PyObject *args) {
+static PyObject* Trigger_get_microtime(Trigger_Data *self, void *closure) {
 
-    float microtime;
+    return PyFloat_FromDouble(sq_trigger_get_microtime(self->trig));
 
-    if (!PyArg_ParseTuple(args, "f", &microtime)) {
-        return NULL;
+}
+
+static int Trigger_set_microtime(Trigger_Data *self, PyObject *value, void *closure) {
+
+    float microtime = PyFloat_AsDouble(value);
+    if (PyErr_Occurred()) {
+        return -1;
     }
 
     sq_trigger_set_microtime(self->trig, microtime);
 
-    Py_RETURN_NONE;
+    return 0;
 
 }
 
-static PyObject *Trigger_set_channel(Trigger_Data *self, PyObject *args) {
+static PyObject* Trigger_get_channel(Trigger_Data *self, void *closure) {
 
-    int channel;
+    return DEF_LONG(sq_trigger_get_channel(self->trig));
 
-    if (!PyArg_ParseTuple(args, "i", &channel)) {
-        return NULL;
+}
+
+static int Trigger_set_channel(Trigger_Data *self, PyObject *value, void *closure) {
+
+    int channel = PyLong_AsLong(value);
+    if (PyErr_Occurred()) {
+        return -1;
     }
 
     sq_trigger_set_channel(self->trig, channel);
 
-    Py_RETURN_NONE;
+    return 0;
 
 }
 
 static PyMethodDef Trigger_methods[] = {
-
-    {"set_type", (PyCFunction) Trigger_set_type, METH_VARARGS, NULL},
-    {"set_note_value", (PyCFunction) Trigger_set_note_value, METH_VARARGS, NULL},
-    {"set_note_velocity", (PyCFunction) Trigger_set_note_velocity, METH_VARARGS, NULL},
-    {"set_note_length", (PyCFunction) Trigger_set_note_length, METH_VARARGS, NULL},
-    {"set_cc_number", (PyCFunction) Trigger_set_cc_number, METH_VARARGS, NULL},
-    {"set_cc_value", (PyCFunction) Trigger_set_cc_value, METH_VARARGS, NULL},
-    {"set_probability", (PyCFunction) Trigger_set_probability, METH_VARARGS, NULL},
-    {"set_microtime", (PyCFunction) Trigger_set_microtime, METH_VARARGS, NULL},
-    {"set_channel", (PyCFunction) Trigger_set_channel, METH_VARARGS, NULL},
     {NULL}
+};
 
+static PyMemberDef Trigger_members[] = {
+    {NULL}
+};
+
+static PyGetSetDef Trigger_getset[] = {
+    {"type", (getter) Trigger_get_type, (setter) Trigger_set_type, NULL, NULL},
+    {"note_value", (getter) Trigger_get_note_value, (setter) Trigger_set_note_value, NULL, NULL},
+    {"note_velocity", (getter) Trigger_get_note_velocity, (setter) Trigger_set_note_velocity, NULL, NULL},
+    {"note_length", (getter) Trigger_get_note_length, (setter) Trigger_set_note_length, NULL, NULL},
+    {"cc_number", (getter) Trigger_get_cc_number, (setter) Trigger_set_cc_number, NULL, NULL},
+    {"cc_value", (getter) Trigger_get_cc_value, (setter) Trigger_set_cc_value, NULL, NULL},
+    {"probability", (getter) Trigger_get_probability, (setter) Trigger_set_probability, NULL, NULL},
+    {"microtime", (getter) Trigger_get_microtime, (setter) Trigger_set_microtime, NULL, NULL},
+    {"channel", (getter) Trigger_get_channel, (setter) Trigger_set_channel, NULL, NULL},
+    {NULL}
 };
 
 PyTypeObject Trigger_Type = {
@@ -203,12 +274,9 @@ PyTypeObject Trigger_Type = {
     0,                            /* tp_iter           */
     0,                            /* tp_iternext       */
 
-    // TODO
     Trigger_methods,              /* tp_methods        */
-    //Trigger_members,              /* tp_members        */
-    //Trigger_getseters,            /* tp_getset         */
-    0,              /* tp_members        */
-    0,            /* tp_getset         */
+    Trigger_members,              /* tp_members        */
+    Trigger_getset,               /* tp_getset         */
 
     0,                            /* tp_base           */
     0,                            /* tp_dict           */
