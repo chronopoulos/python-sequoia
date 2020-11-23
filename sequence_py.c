@@ -239,6 +239,36 @@ static PyObject *Sequence_get_nsteps(Sequence_Data *self, PyObject *args) {
 
 }
 
+static PyObject *Sequence_set_notifications(Sequence_Data *self, PyObject *args) {
+
+    PyObject *object;
+
+    if (!PyArg_ParseTuple(args, "O", &object)) {
+        Py_RETURN_NONE;
+    }
+
+    bool set = PyObject_IsTrue(object);
+    if (PyErr_Occurred()) {
+        Py_RETURN_NONE;
+    }
+
+    sq_sequence_set_notifications(self->seq, set);
+
+    Py_RETURN_NONE;
+
+}
+
+static PyObject *Sequence_read_new_playhead(Sequence_Data *self, PyObject *args) {
+
+    int ph;
+    bool new;
+
+    new = sq_sequence_read_new_playhead(self->seq, &ph);
+
+    return Py_BuildValue("Oi", PyBool_FromLong(new), ph);
+
+}
+
 static PyMethodDef Sequence_methods[] = {
 
     {"set_outport", (PyCFunction) Sequence_set_outport, METH_VARARGS, NULL},
@@ -246,6 +276,8 @@ static PyMethodDef Sequence_methods[] = {
     {"clear_trig", (PyCFunction) Sequence_clear_trig, METH_VARARGS, NULL},
     {"pprint", (PyCFunction) Sequence_pprint, METH_NOARGS, NULL},
     {"get_nsteps", (PyCFunction) Sequence_get_nsteps, METH_NOARGS, NULL},
+    {"set_notifications", (PyCFunction) Sequence_set_notifications, METH_VARARGS, NULL},
+    {"read_new_playhead", (PyCFunction) Sequence_read_new_playhead, METH_VARARGS, NULL},
     {NULL}
 
 };
