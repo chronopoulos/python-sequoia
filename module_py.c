@@ -3,8 +3,6 @@
 
 static PyObject* Module_load(PyObject *self, PyObject *args) {
 
-    printf("testing testing\n");
-
     char *name;
     if (!PyArg_ParseTuple(args, "s", &name)) {
         return NULL;

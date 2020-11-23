@@ -138,10 +138,10 @@ static PyObject *Session_rm_sequence(Session_Data *self, PyObject *args) {
 
 static PyObject *Session_get_bpm(Session_Data *self, PyObject *args) {
 
-    int result;
+    float result;
     result = sq_session_get_bpm(self->sesh);
 
-    return DEF_LONG(result);
+    return PyFloat_FromDouble(result);
 
 }
 
