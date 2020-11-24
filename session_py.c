@@ -1,4 +1,5 @@
 #include "types_py.h"
+#include "structmember.h"
 #include "defs.h"
 
 static int Session_init(Session_Data *self, PyObject *args, PyObject *kwds) {
@@ -44,17 +45,16 @@ static PyObject *Session_repr(Session_Data *self, PyObject *unused) {
 
 }
 
-static PyObject *Session_set_bpm(Session_Data *self, PyObject *args) {
+static int Session_set_bpm(Session_Data *self, PyObject *value, void *closure) {
 
-    float bpm;
-
-    if (!PyArg_ParseTuple(args, "f", &bpm)) {
-        return NULL;
+    float bpm = PyFloat_AsDouble(value);
+    if (PyErr_Occurred()) {
+        return -1;
     }
 
     sq_session_set_bpm(self->sesh, bpm);
 
-    Py_RETURN_NONE;
+    return 0;
 
 }
 
@@ -74,7 +74,7 @@ static PyObject *Session_stop(Session_Data *self, PyObject *unused) {
 
 }
 
-static PyObject *Session_get_name(Session_Data *self, PyObject *unused) {
+static PyObject *Session_get_name(Session_Data *self, void *closure) {
 
     return DEF_STRING(sq_session_get_name(self->sesh));
 
@@ -136,39 +136,27 @@ static PyObject *Session_rm_sequence(Session_Data *self, PyObject *args) {
 
 }
 
-static PyObject *Session_get_bpm(Session_Data *self, PyObject *args) {
+static PyObject *Session_get_bpm(Session_Data *self, void *closure) {
 
-    float result;
-    result = sq_session_get_bpm(self->sesh);
-
-    return PyFloat_FromDouble(result);
+    return PyFloat_FromDouble(sq_session_get_bpm(self->sesh));
 
 }
 
-static PyObject *Session_get_nseqs(Session_Data *self, PyObject *args) {
+static PyObject *Session_get_nseqs(Session_Data *self, void *closure) {
 
-    int result;
-    result = sq_session_get_nseqs(self->sesh);
-
-    return DEF_LONG(result);
+    return DEF_LONG(sq_session_get_nseqs(self->sesh));
 
 }
 
-static PyObject *Session_get_ninports(Session_Data *self, PyObject *args) {
+static PyObject *Session_get_ninports(Session_Data *self, void *closure) {
 
-    int result;
-    result = sq_session_get_ninports(self->sesh);
-
-    return DEF_LONG(result);
+    return DEF_LONG(sq_session_get_ninports(self->sesh));
 
 }
 
-static PyObject *Session_get_noutports(Session_Data *self, PyObject *args) {
+static PyObject *Session_get_noutports(Session_Data *self, void *closure) {
 
-    int result;
-    result = sq_session_get_noutports(self->sesh);
-
-    return DEF_LONG(result);
+    return DEF_LONG(sq_session_get_noutports(self->sesh));
 
 }
 
@@ -239,18 +227,25 @@ static PyMethodDef Session_methods[] = {
     {"rm_sequence", (PyCFunction) Session_rm_sequence, METH_VARARGS, NULL},
     {"start", (PyCFunction) Session_start, METH_NOARGS, NULL},
     {"stop", (PyCFunction) Session_stop, METH_NOARGS, NULL},
-    {"set_bpm", (PyCFunction) Session_set_bpm, METH_VARARGS, NULL},
-    {"get_name", (PyCFunction) Session_get_name, METH_NOARGS, NULL},
-    {"get_bpm", (PyCFunction) Session_get_bpm, METH_VARARGS, NULL},
-    {"get_nseqs", (PyCFunction) Session_get_nseqs, METH_VARARGS, NULL},
     {"get_seq", (PyCFunction) Session_get_seq, METH_VARARGS, NULL},
-    {"get_ninports", (PyCFunction) Session_get_ninports, METH_VARARGS, NULL},
     {"get_inport", (PyCFunction) Session_get_inport, METH_VARARGS, NULL},
-    {"get_noutports", (PyCFunction) Session_get_noutports, METH_VARARGS, NULL},
     {"get_outport", (PyCFunction) Session_get_outport, METH_VARARGS, NULL},
     {"save", (PyCFunction) Session_save, METH_VARARGS, NULL},
     {NULL}
 
+};
+
+static PyMemberDef Session_members[] = {
+    {NULL}
+};
+
+static PyGetSetDef Session_getset[] = {
+    {"bpm", (getter) Session_get_bpm, (setter) Session_set_bpm, NULL, NULL},
+    {"name", (getter) Session_get_name, NULL, NULL, NULL},  // read-only (for now)
+    {"nseqs", (getter) Session_get_nseqs, NULL, NULL, NULL},  // read-only
+    {"ninports", (getter) Session_get_ninports, NULL, NULL, NULL},  // read-only
+    {"noutports", (getter) Session_get_noutports, NULL, NULL, NULL},  // read-only
+    {NULL}
 };
 
 PyTypeObject Session_Type = {
@@ -288,10 +283,8 @@ PyTypeObject Session_Type = {
 
     // TODO
     Session_methods,              /* tp_methods        */
-    //Session_members,              /* tp_members        */
-    //Session_getseters,            /* tp_getset         */
-    0,              /* tp_members        */
-    0,            /* tp_getset         */
+    Session_members,              /* tp_members        */
+    Session_getset,               /* tp_getset         */
 
     0,                            /* tp_base           */
     0,                            /* tp_dict           */
