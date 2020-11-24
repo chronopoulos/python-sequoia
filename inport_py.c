@@ -1,4 +1,6 @@
 #include "types_py.h"
+#include "structmember.h"
+#include "defs.h"
 
 static int Inport_init(Inport_Data *self, PyObject *args, PyObject *kwds) {
 
@@ -41,50 +43,69 @@ static PyObject *Inport_repr(Inport_Data *self, PyObject *unused) {
 
 }
 
-static PyObject *Inport_set_name(Inport_Data *self, PyObject *args) {
+static PyObject* Inport_get_name(Inport_Data *self, void *closure) {
 
-    char *name;
-
-    PyArg_ParseTuple(args, "s", &name);
-
-    sq_inport_set_name(self->inport, name);
-
-    Py_RETURN_NONE;
+    return DEF_STRING(sq_inport_get_name(self->inport));
 
 }
 
-static PyObject *Inport_set_type(Inport_Data *self, PyObject *args) {
+static int Inport_set_name(Inport_Data *self, PyObject *value, void *closure) {
 
-    int type;
+    const char *name = PyUnicode_AsUTF8(value);
+    if (PyErr_Occurred()) {
+        return -1;
+    }
 
-    PyArg_ParseTuple(args, "i", &type);
+    sq_inport_set_name(self->inport, name);
+
+    return 0;
+
+}
+
+static PyObject* Inport_get_type(Inport_Data *self, void *closure) {
+
+    return DEF_LONG(sq_inport_get_type(self->inport));
+
+}
+
+static int Inport_set_type(Inport_Data *self, PyObject *value, void *closure) {
+
+    int type = PyLong_AsLong(value);
+    if (PyErr_Occurred()) {
+        return -1;
+    }
 
     sq_inport_set_type(self->inport, type);
 
-    Py_RETURN_NONE;
-
+    return 0;
 
 }
 
 static PyMethodDef Inport_methods[] = {
-
-    {"set_name", (PyCFunction) Inport_set_name, METH_VARARGS, NULL},
-    {"set_type", (PyCFunction) Inport_set_type, METH_VARARGS, NULL},
     {NULL}
+};
 
+static PyMemberDef Inport_members[] = {
+    {NULL}
+};
+
+static PyGetSetDef Inport_getset[] = {
+    {"name", (getter) Inport_get_name, (setter) Inport_set_name, NULL, NULL},
+    {"type", (getter) Inport_get_type, (setter) Inport_set_type, NULL, NULL},
+    {NULL}
 };
 
 PyTypeObject Inport_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "sequoia.inport",                 /* tp_name           */
-    sizeof (Inport_Data),             /* tp_basicsize      */
+    "sequoia.inport",             /* tp_name           */
+    sizeof (Inport_Data),         /* tp_basicsize      */
     0,                            /* tp_itemsize       */
-    (destructor) Inport_del,     /* tp_dealloc        */
+    (destructor) Inport_del,      /* tp_dealloc        */
     0,                            /* tp_print          */
     0,                            /* tp_getattr        */
     0,                            /* tp_setattr        */
     0,                            /* tp_compare        */
-    (reprfunc) Inport_repr,      /* tp_repr           */
+    (reprfunc) Inport_repr,       /* tp_repr           */
     0,                            /* tp_as_number      */
     0, //&Py_cvec_tp_as_sequence, /* tp_as_sequence    */
     0,                            /* tp_as_mapping     */
@@ -107,12 +128,9 @@ PyTypeObject Inport_Type = {
     0,                            /* tp_iter           */
     0,                            /* tp_iternext       */
 
-    // TODO
-    Inport_methods,              /* tp_methods        */
-    //Inport_members,              /* tp_members        */
-    //Inport_getseters,            /* tp_getset         */
-    0,              /* tp_members        */
-    0,            /* tp_getset         */
+    Inport_methods,               /* tp_methods        */
+    Inport_members,               /* tp_members        */
+    Inport_getset,                /* tp_getset         */
 
     0,                            /* tp_base           */
     0,                            /* tp_dict           */

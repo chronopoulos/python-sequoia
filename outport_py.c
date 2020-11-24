@@ -1,4 +1,5 @@
 #include "types_py.h"
+#include "structmember.h"
 #include "defs.h"
 
 static int Outport_init(Outport_Data *self, PyObject *args, PyObject *kwds) {
@@ -42,34 +43,36 @@ static PyObject *Outport_repr(Outport_Data *self, PyObject *unused) {
 
 }
 
-static PyObject *Outport_set_name(Outport_Data *self, PyObject *args) {
+static PyObject* Outport_get_name(Outport_Data *self, void *closure) {
 
-    char *name;
-
-    PyArg_ParseTuple(args, "s", &name);
-
-    sq_outport_set_name(self->outport, name);
-
-    Py_RETURN_NONE;
+    return DEF_STRING(sq_outport_get_name(self->outport));
 
 }
 
-static PyObject *Outport_get_name(Outport_Data *self, PyObject *unused) {
+static int Outport_set_name(Outport_Data *self, PyObject *value, void *closure) {
 
-    PyObject *result = NULL;
+    const char *name = PyUnicode_AsUTF8(value);
+    if (PyErr_Occurred()) {
+        return -1;
+    }
 
-    result = DEF_STRING(sq_outport_get_name(self->outport));
+    sq_outport_set_name(self->outport, name);
 
-    return result;
+    return 0;
 
 }
 
 static PyMethodDef Outport_methods[] = {
-
-    {"set_name", (PyCFunction) Outport_set_name, METH_VARARGS, NULL},
-    {"get_name", (PyCFunction) Outport_get_name, METH_NOARGS, NULL},
     {NULL}
+};
 
+static PyMemberDef Outport_members[] = {
+    {NULL}
+};
+
+static PyGetSetDef Outport_getset[] = {
+    {"name", (getter) Outport_get_name, (setter) Outport_set_name, NULL, NULL},
+    {NULL}
 };
 
 PyTypeObject Outport_Type = {
@@ -105,12 +108,9 @@ PyTypeObject Outport_Type = {
     0,                            /* tp_iter           */
     0,                            /* tp_iternext       */
 
-    // TODO
     Outport_methods,              /* tp_methods        */
-    //Outport_members,              /* tp_members        */
-    //Outport_getseters,            /* tp_getset         */
-    0,              /* tp_members        */
-    0,            /* tp_getset         */
+    Outport_members,              /* tp_members        */
+    Outport_getset,               /* tp_getset         */
 
     0,                            /* tp_base           */
     0,                            /* tp_dict           */
