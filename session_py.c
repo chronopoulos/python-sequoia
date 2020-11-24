@@ -281,7 +281,6 @@ PyTypeObject Session_Type = {
     0,                            /* tp_iter           */
     0,                            /* tp_iternext       */
 
-    // TODO
     Session_methods,              /* tp_methods        */
     Session_members,              /* tp_members        */
     Session_getset,               /* tp_getset         */

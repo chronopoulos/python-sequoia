@@ -330,7 +330,6 @@ PyTypeObject Sequence_Type = {
     0,                            /* tp_iter           */
     0,                            /* tp_iternext       */
 
-    // TODO
     Sequence_methods,             /* tp_methods        */
     Sequence_members,             /* tp_members        */
     Sequence_getset,              /* tp_getset         */
