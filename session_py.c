@@ -201,6 +201,36 @@ static PyObject *Session_get_seq(Session_Data *self, PyObject *args) {
 
 }
 
+static PyObject *Session_get_inport(Session_Data *self, PyObject *args) {
+
+    int index;
+
+    if (!PyArg_ParseTuple(args, "i", &index)) {
+        return NULL;
+    }
+
+    Inport_Data *inport_data;
+    inport_data = (Inport_Data *) Inport_Type.tp_alloc(&Inport_Type, 0);
+    inport_data->inport = sq_session_get_inport(self->sesh, index);
+    return (PyObject *) inport_data;
+
+}
+
+static PyObject *Session_get_outport(Session_Data *self, PyObject *args) {
+
+    int index;
+
+    if (!PyArg_ParseTuple(args, "i", &index)) {
+        return NULL;
+    }
+
+    Outport_Data *outport_data;
+    outport_data = (Outport_Data *) Outport_Type.tp_alloc(&Outport_Type, 0);
+    outport_data->outport = sq_session_get_outport(self->sesh, index);
+    return (PyObject *) outport_data;
+
+}
+
 static PyMethodDef Session_methods[] = {
 
     {"register_outport", (PyCFunction) Session_register_outport, METH_VARARGS, NULL},
@@ -215,9 +245,9 @@ static PyMethodDef Session_methods[] = {
     {"get_nseqs", (PyCFunction) Session_get_nseqs, METH_VARARGS, NULL},
     {"get_seq", (PyCFunction) Session_get_seq, METH_VARARGS, NULL},
     {"get_ninports", (PyCFunction) Session_get_ninports, METH_VARARGS, NULL},
-//    {"get_inport", (PyCFunction) Session_get_inport, METH_VARARGS, NULL},
+    {"get_inport", (PyCFunction) Session_get_inport, METH_VARARGS, NULL},
     {"get_noutports", (PyCFunction) Session_get_noutports, METH_VARARGS, NULL},
-//    {"get_outport", (PyCFunction) Session_get_outport, METH_VARARGS, NULL},
+    {"get_outport", (PyCFunction) Session_get_outport, METH_VARARGS, NULL},
     {"save", (PyCFunction) Session_save, METH_VARARGS, NULL},
     {NULL}
 
