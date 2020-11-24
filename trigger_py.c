@@ -27,13 +27,13 @@ static void Trigger_del(Trigger_Data *self) {
 
 static PyObject *Trigger_repr(Trigger_Data *self, PyObject *unused) {
 
-    return PyUnicode_FromString("<sequoia trigger>");
+    return FROMSTRING("<sequoia trigger>");
 
 }
 
 static PyObject* Trigger_get_type(Trigger_Data *self, void *closure) {
 
-    return DEF_LONG(sq_trigger_get_type(self->trig));
+    return FROMLONG(sq_trigger_get_type(self->trig));
 
 }
 
@@ -54,7 +54,7 @@ static int Trigger_set_type(Trigger_Data *self, PyObject *value, void *closure) 
 
 static PyObject* Trigger_get_note_value(Trigger_Data *self, void *closure) {
 
-    return DEF_LONG(sq_trigger_get_note_value(self->trig));
+    return FROMLONG(sq_trigger_get_note_value(self->trig));
 
 }
 
@@ -78,7 +78,7 @@ static int Trigger_set_note_value(Trigger_Data *self, PyObject *value, void *clo
 
 static PyObject* Trigger_get_note_velocity(Trigger_Data *self, void *closure) {
 
-    return DEF_LONG(sq_trigger_get_note_velocity(self->trig));
+    return FROMLONG(sq_trigger_get_note_velocity(self->trig));
 
 }
 
@@ -123,7 +123,7 @@ static int Trigger_set_note_length(Trigger_Data *self, PyObject *value, void *cl
 
 static PyObject* Trigger_get_cc_number(Trigger_Data *self, void *closure) {
 
-    return DEF_LONG(sq_trigger_get_cc_number(self->trig));
+    return FROMLONG(sq_trigger_get_cc_number(self->trig));
 
 }
 
@@ -144,7 +144,7 @@ static int Trigger_set_cc_number(Trigger_Data *self, PyObject *value, void *clos
 
 static PyObject* Trigger_get_cc_value(Trigger_Data *self, void *closure) {
 
-    return DEF_LONG(sq_trigger_get_cc_value(self->trig));
+    return FROMLONG(sq_trigger_get_cc_value(self->trig));
 
 }
 
@@ -203,7 +203,7 @@ static int Trigger_set_microtime(Trigger_Data *self, PyObject *value, void *clos
 
 static PyObject* Trigger_get_channel(Trigger_Data *self, void *closure) {
 
-    return DEF_LONG(sq_trigger_get_channel(self->trig));
+    return FROMLONG(sq_trigger_get_channel(self->trig));
 
 }
 

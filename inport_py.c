@@ -37,7 +37,7 @@ static PyObject *Inport_repr(Inport_Data *self, PyObject *unused) {
     char result_str[96];
 
     sprintf(result_str, "<sequoia in-port: %s>", sq_inport_get_name(self->inport));
-    result = PyUnicode_FromString(result_str);
+    result = FROMSTRING(result_str);
 
     return result;
 
@@ -45,13 +45,13 @@ static PyObject *Inport_repr(Inport_Data *self, PyObject *unused) {
 
 static PyObject* Inport_get_name(Inport_Data *self, void *closure) {
 
-    return DEF_STRING(sq_inport_get_name(self->inport));
+    return FROMSTRING(sq_inport_get_name(self->inport));
 
 }
 
 static int Inport_set_name(Inport_Data *self, PyObject *value, void *closure) {
 
-    const char *name = PyUnicode_AsUTF8(value);
+    const char *name = ASSTRING(value);
     if (PyErr_Occurred()) {
         return -1;
     }
@@ -64,7 +64,7 @@ static int Inport_set_name(Inport_Data *self, PyObject *value, void *closure) {
 
 static PyObject* Inport_get_type(Inport_Data *self, void *closure) {
 
-    return DEF_LONG(sq_inport_get_type(self->inport));
+    return FROMLONG(sq_inport_get_type(self->inport));
 
 }
 

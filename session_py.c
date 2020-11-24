@@ -39,7 +39,7 @@ static PyObject *Session_repr(Session_Data *self, PyObject *unused) {
     sprintf(result_str, "<sequoia session: '%s' at %.3f bpm>",
             sq_session_get_name(self->sesh), sq_session_get_bpm(self->sesh));
 
-    result = PyUnicode_FromString(result_str);
+    result = FROMSTRING(result_str);
 
     return result;
 
@@ -76,7 +76,7 @@ static PyObject *Session_stop(Session_Data *self, PyObject *unused) {
 
 static PyObject *Session_get_name(Session_Data *self, void *closure) {
 
-    return DEF_STRING(sq_session_get_name(self->sesh));
+    return FROMSTRING(sq_session_get_name(self->sesh));
 
 }
 
@@ -144,19 +144,19 @@ static PyObject *Session_get_bpm(Session_Data *self, void *closure) {
 
 static PyObject *Session_get_nseqs(Session_Data *self, void *closure) {
 
-    return DEF_LONG(sq_session_get_nseqs(self->sesh));
+    return FROMLONG(sq_session_get_nseqs(self->sesh));
 
 }
 
 static PyObject *Session_get_ninports(Session_Data *self, void *closure) {
 
-    return DEF_LONG(sq_session_get_ninports(self->sesh));
+    return FROMLONG(sq_session_get_ninports(self->sesh));
 
 }
 
 static PyObject *Session_get_noutports(Session_Data *self, void *closure) {
 
-    return DEF_LONG(sq_session_get_noutports(self->sesh));
+    return FROMLONG(sq_session_get_noutports(self->sesh));
 
 }
 

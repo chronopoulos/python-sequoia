@@ -2,11 +2,13 @@
 #define DEFS_H
 
 #if PY_MAJOR_VERSION >= 3
-    #define DEF_LONG PyLong_FromLong
-    #define DEF_STRING PyUnicode_FromString
+    #define FROMLONG PyLong_FromLong
+    #define FROMSTRING PyUnicode_FromString
+    #define ASSTRING PyUnicode_AsUTF8
 #else
-    #define DEF_LONG PyInt_FromLong
-    #define DEF_STRING PyString_FromString
+    #define FROMLONG PyInt_FromLong
+    #define FROMSTRING PyString_FromString
+    #define ASSTRING PyString_AsString
 #endif
 
 #endif

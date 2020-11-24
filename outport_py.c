@@ -37,7 +37,7 @@ static PyObject *Outport_repr(Outport_Data *self, PyObject *unused) {
     char result_str[96];
 
     sprintf(result_str, "<sequoia out-port: %s>", sq_outport_get_name(self->outport));
-    result = PyUnicode_FromString(result_str);
+    result = FROMSTRING(result_str);
 
     return result;
 
@@ -45,13 +45,13 @@ static PyObject *Outport_repr(Outport_Data *self, PyObject *unused) {
 
 static PyObject* Outport_get_name(Outport_Data *self, void *closure) {
 
-    return DEF_STRING(sq_outport_get_name(self->outport));
+    return FROMSTRING(sq_outport_get_name(self->outport));
 
 }
 
 static int Outport_set_name(Outport_Data *self, PyObject *value, void *closure) {
 
-    const char *name = PyUnicode_AsUTF8(value);
+    const char *name = ASSTRING(value);
     if (PyErr_Occurred()) {
         return -1;
     }

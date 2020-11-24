@@ -39,7 +39,7 @@ static PyObject *Sequence_repr(Sequence_Data *self, PyObject *unused) {
     sprintf(result_str, "<sequoia sequence: '%s' with %d steps>",
             sq_sequence_get_name(self->seq), sq_sequence_get_nsteps(self->seq));
 
-    result = PyUnicode_FromString(result_str);
+    result = FROMSTRING(result_str);
 
     return result;
 
@@ -48,13 +48,13 @@ static PyObject *Sequence_repr(Sequence_Data *self, PyObject *unused) {
 
 static PyObject* Sequence_get_name(Sequence_Data *self, void *closure) {
 
-    return DEF_STRING(sq_sequence_get_name(self->seq));
+    return FROMSTRING(sq_sequence_get_name(self->seq));
 
 }
 
 static int Sequence_set_name(Sequence_Data *self, PyObject *value, void *closure) {
 
-    const char *name = PyUnicode_AsUTF8(value);
+    const char *name = ASSTRING(value);
     if (PyErr_Occurred()) {
         return -1;
     }
@@ -67,7 +67,7 @@ static int Sequence_set_name(Sequence_Data *self, PyObject *value, void *closure
 
 static PyObject* Sequence_get_transpose(Sequence_Data *self, void *closure) {
 
-    return DEF_LONG(sq_sequence_get_transpose(self->seq));
+    return FROMLONG(sq_sequence_get_transpose(self->seq));
 
 }
 
@@ -86,7 +86,7 @@ static int Sequence_set_transpose(Sequence_Data *self, PyObject *value, void *cl
 
 static PyObject* Sequence_get_playhead(Sequence_Data *self, void *closure) {
 
-    return DEF_LONG(sq_sequence_get_playhead(self->seq));
+    return FROMLONG(sq_sequence_get_playhead(self->seq));
 
 }
 
@@ -105,7 +105,7 @@ static int Sequence_set_playhead(Sequence_Data *self, PyObject *value, void *clo
 
 static PyObject* Sequence_get_clockdivide(Sequence_Data *self, void *closure) {
 
-    return DEF_LONG(sq_sequence_get_clockdivide(self->seq));
+    return FROMLONG(sq_sequence_get_clockdivide(self->seq));
 
 }
 
@@ -143,7 +143,7 @@ static int Sequence_set_mute(Sequence_Data *self, PyObject *value, void *closure
 
 static PyObject* Sequence_get_first(Sequence_Data *self, void *closure) {
 
-    return DEF_LONG(sq_sequence_get_first(self->seq));
+    return FROMLONG(sq_sequence_get_first(self->seq));
 
 }
 
@@ -162,7 +162,7 @@ static int Sequence_set_first(Sequence_Data *self, PyObject *value, void *closur
 
 static PyObject* Sequence_get_last(Sequence_Data *self, void *closure) {
 
-    return DEF_LONG(sq_sequence_get_last(self->seq));
+    return FROMLONG(sq_sequence_get_last(self->seq));
 
 }
 
@@ -232,7 +232,7 @@ static PyObject *Sequence_pprint(Sequence_Data *self, PyObject *args) {
 
 static PyObject *Sequence_get_nsteps(Sequence_Data *self, void *closure) {
 
-    return DEF_LONG(sq_sequence_get_nsteps(self->seq));
+    return FROMLONG(sq_sequence_get_nsteps(self->seq));
 
 }
 

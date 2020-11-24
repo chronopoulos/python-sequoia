@@ -50,22 +50,22 @@ static PyObject *initsequoia_worker(void) {
         return m;
     }
 
-    PyDict_SetItem(Inport_Type.tp_dict, DEF_STRING("NONE"),
-                    DEF_LONG(INPORT_NONE));
-    PyDict_SetItem(Inport_Type.tp_dict, DEF_STRING("TRANSPOSE"),
-                    DEF_LONG(INPORT_TRANSPOSE));
-    PyDict_SetItem(Inport_Type.tp_dict, DEF_STRING("PLAYHEAD"),
-                    DEF_LONG(INPORT_PLAYHEAD));
-    PyDict_SetItem(Inport_Type.tp_dict, DEF_STRING("CLOCKDIVIDE"),
-                    DEF_LONG(INPORT_CLOCKDIVIDE));
-    PyDict_SetItem(Inport_Type.tp_dict, DEF_STRING("DIRECTION"),
-                    DEF_LONG(INPORT_DIRECTION));
-    PyDict_SetItem(Inport_Type.tp_dict, DEF_STRING("MUTE"),
-                    DEF_LONG(INPORT_MUTE));
-    PyDict_SetItem(Inport_Type.tp_dict, DEF_STRING("FIRST"),
-                    DEF_LONG(INPORT_FIRST));
-    PyDict_SetItem(Inport_Type.tp_dict, DEF_STRING("LAST"),
-                    DEF_LONG(INPORT_LAST));
+    PyDict_SetItem(Inport_Type.tp_dict, FROMSTRING("NONE"),
+                    FROMLONG(INPORT_NONE));
+    PyDict_SetItem(Inport_Type.tp_dict, FROMSTRING("TRANSPOSE"),
+                    FROMLONG(INPORT_TRANSPOSE));
+    PyDict_SetItem(Inport_Type.tp_dict, FROMSTRING("PLAYHEAD"),
+                    FROMLONG(INPORT_PLAYHEAD));
+    PyDict_SetItem(Inport_Type.tp_dict, FROMSTRING("CLOCKDIVIDE"),
+                    FROMLONG(INPORT_CLOCKDIVIDE));
+    PyDict_SetItem(Inport_Type.tp_dict, FROMSTRING("DIRECTION"),
+                    FROMLONG(INPORT_DIRECTION));
+    PyDict_SetItem(Inport_Type.tp_dict, FROMSTRING("MUTE"),
+                    FROMLONG(INPORT_MUTE));
+    PyDict_SetItem(Inport_Type.tp_dict, FROMSTRING("FIRST"),
+                    FROMLONG(INPORT_FIRST));
+    PyDict_SetItem(Inport_Type.tp_dict, FROMSTRING("LAST"),
+                    FROMLONG(INPORT_LAST));
 
 #if PY_MAJOR_VERSION >= 3
     static struct PyModuleDef moduledef = {
