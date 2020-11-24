@@ -230,12 +230,9 @@ static PyObject *Sequence_pprint(Sequence_Data *self, PyObject *args) {
 
 }
 
-static PyObject *Sequence_get_nsteps(Sequence_Data *self, PyObject *args) {
+static PyObject *Sequence_get_nsteps(Sequence_Data *self, void *closure) {
 
-    int result;
-    result = sq_sequence_get_nsteps(self->seq);
-
-    return DEF_LONG(result);
+    return DEF_LONG(sq_sequence_get_nsteps(self->seq));
 
 }
 
@@ -275,7 +272,6 @@ static PyMethodDef Sequence_methods[] = {
     {"set_trig", (PyCFunction) Sequence_set_trig, METH_VARARGS, NULL},
     {"clear_trig", (PyCFunction) Sequence_clear_trig, METH_VARARGS, NULL},
     {"pprint", (PyCFunction) Sequence_pprint, METH_NOARGS, NULL},
-    {"get_nsteps", (PyCFunction) Sequence_get_nsteps, METH_NOARGS, NULL},
     {"set_notifications", (PyCFunction) Sequence_set_notifications, METH_VARARGS, NULL},
     {"read_new_playhead", (PyCFunction) Sequence_read_new_playhead, METH_VARARGS, NULL},
     {NULL}
@@ -288,6 +284,7 @@ static PyMemberDef Sequence_members[] = {
 
 static PyGetSetDef Sequence_getset[] = {
     {"name", (getter) Sequence_get_name, (setter) Sequence_set_name, NULL, NULL},
+    {"nsteps", (getter) Sequence_get_nsteps, NULL, NULL, NULL},  // read-only
     {"transpose", (getter) Sequence_get_transpose, (setter) Sequence_set_transpose, NULL, NULL},
     {"playhead", (getter) Sequence_get_playhead, (setter) Sequence_set_playhead, NULL, NULL},
     {"clockdivide", (getter) Sequence_get_clockdivide, (setter) Sequence_set_clockdivide, NULL, NULL},
