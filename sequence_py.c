@@ -296,7 +296,7 @@ static PyGetSetDef Sequence_getset[] = {
 
 PyTypeObject Sequence_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "sequoia.sequence",           /* tp_name           */
+    "sequoia.Sequence",           /* tp_name           */
     sizeof (Sequence_Data),       /* tp_basicsize      */
     0,                            /* tp_itemsize       */
     (destructor) Sequence_del,    /* tp_dealloc        */

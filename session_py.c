@@ -250,7 +250,7 @@ static PyGetSetDef Session_getset[] = {
 
 PyTypeObject Session_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "sequoia.session",                 /* tp_name           */
+    "sequoia.Session",                 /* tp_name           */
     sizeof (Session_Data),             /* tp_basicsize      */
     0,                            /* tp_itemsize       */
     (destructor) Session_del,     /* tp_dealloc        */

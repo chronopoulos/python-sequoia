@@ -243,7 +243,7 @@ static PyGetSetDef Trigger_getset[] = {
 
 PyTypeObject Trigger_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "sequoia.trigger",                 /* tp_name           */
+    "sequoia.Trigger",                 /* tp_name           */
     sizeof (Trigger_Data),             /* tp_basicsize      */
     0,                            /* tp_itemsize       */
     (destructor) Trigger_del,     /* tp_dealloc        */

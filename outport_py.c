@@ -77,7 +77,7 @@ static PyGetSetDef Outport_getset[] = {
 
 PyTypeObject Outport_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "sequoia.outport",                 /* tp_name           */
+    "sequoia.Outport",                 /* tp_name           */
     sizeof (Outport_Data),             /* tp_basicsize      */
     0,                            /* tp_itemsize       */
     (destructor) Outport_del,     /* tp_dealloc        */

@@ -97,7 +97,7 @@ static PyGetSetDef Inport_getset[] = {
 
 PyTypeObject Inport_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "sequoia.inport",             /* tp_name           */
+    "sequoia.Inport",             /* tp_name           */
     sizeof (Inport_Data),         /* tp_basicsize      */
     0,                            /* tp_itemsize       */
     (destructor) Inport_del,      /* tp_dealloc        */

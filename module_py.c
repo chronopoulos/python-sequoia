@@ -85,19 +85,19 @@ static PyObject *initsequoia_worker(void) {
 #endif
 
     Py_INCREF (&Session_Type);
-    PyModule_AddObject (m, "session", (PyObject *) &Session_Type);
+    PyModule_AddObject (m, "Session", (PyObject *) &Session_Type);
 
     Py_INCREF (&Sequence_Type);
-    PyModule_AddObject (m, "sequence", (PyObject *) &Sequence_Type);
+    PyModule_AddObject (m, "Sequence", (PyObject *) &Sequence_Type);
 
     Py_INCREF (&Trigger_Type);
-    PyModule_AddObject (m, "trigger", (PyObject *) &Trigger_Type);
+    PyModule_AddObject (m, "Trigger", (PyObject *) &Trigger_Type);
 
     Py_INCREF (&Outport_Type);
-    PyModule_AddObject (m, "outport", (PyObject *) &Outport_Type);
+    PyModule_AddObject (m, "Outport", (PyObject *) &Outport_Type);
 
     Py_INCREF (&Inport_Type);
-    PyModule_AddObject (m, "inport", (PyObject *) &Inport_Type);
+    PyModule_AddObject (m, "Inport", (PyObject *) &Inport_Type);
 
     return m;
 
