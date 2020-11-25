@@ -99,6 +99,23 @@ static PyObject *initsequoia_worker(void) {
     Py_INCREF (&Inport_Type);
     PyModule_AddObject (m, "Inport", (PyObject *) &Inport_Type);
 
+    PyModule_AddIntConstant(m, "MOTION_FORWARD", MOTION_FORWARD);
+    PyModule_AddIntConstant(m, "MOTION_BACKWARD", MOTION_BACKWARD);
+    PyModule_AddIntConstant(m, "MOTION_BOUNCE", MOTION_BOUNCE);
+
+    PyModule_AddIntConstant(m, "TRIG_NULL", TRIG_NULL);
+    PyModule_AddIntConstant(m, "TRIG_NOTE", TRIG_NOTE);
+    PyModule_AddIntConstant(m, "TRIG_CC", TRIG_CC);
+
+    PyModule_AddIntConstant(m, "INPORT_NONE", INPORT_NONE);
+    PyModule_AddIntConstant(m, "INPORT_TRANSPOSE", INPORT_TRANSPOSE);
+    PyModule_AddIntConstant(m, "INPORT_PLAYHEAD", INPORT_PLAYHEAD);
+    PyModule_AddIntConstant(m, "INPORT_CLOCKDIVIDE", INPORT_CLOCKDIVIDE);
+    PyModule_AddIntConstant(m, "INPORT_DIRECTION", INPORT_DIRECTION);
+    PyModule_AddIntConstant(m, "INPORT_MUTE", INPORT_MUTE);
+    PyModule_AddIntConstant(m, "INPORT_FIRST", INPORT_FIRST);
+    PyModule_AddIntConstant(m, "INPORT_LAST", INPORT_LAST);
+
     return m;
 
 }
