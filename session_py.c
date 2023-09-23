@@ -45,6 +45,14 @@ static PyObject *Session_repr(Session_Data *self, PyObject *unused) {
 
 }
 
+static PyObject *Session_disconnect_jack(Session_Data *self, PyObject *unused) {
+
+    sq_session_disconnect_jack(self->sesh);
+
+    Py_RETURN_NONE;
+
+}
+
 static int Session_set_bpm(Session_Data *self, PyObject *value, void *closure) {
 
     float bpm = PyFloat_AsDouble(value);
@@ -221,6 +229,7 @@ static PyObject *Session_get_outport(Session_Data *self, PyObject *args) {
 
 static PyMethodDef Session_methods[] = {
 
+    {"disconnect_jack", (PyCFunction) Session_disconnect_jack, METH_NOARGS, NULL},
     {"register_outport", (PyCFunction) Session_register_outport, METH_VARARGS, NULL},
     {"register_inport", (PyCFunction) Session_register_inport, METH_VARARGS, NULL},
     {"add_sequence", (PyCFunction) Session_add_sequence, METH_VARARGS, NULL},
