@@ -266,6 +266,72 @@ static PyObject *Sequence_read_new_playhead(Sequence_Data *self, PyObject *args)
 
 }
 
+static PyObject *Sequence_read_new_first(Sequence_Data *self, PyObject *args) {
+
+    int first;
+    bool new;
+
+    new = sq_sequence_read_new_first(self->seq, &first);
+
+    return Py_BuildValue("Oi", PyBool_FromLong(new), first);
+
+}
+
+static PyObject *Sequence_read_new_last(Sequence_Data *self, PyObject *args) {
+
+    int last;
+    bool new;
+
+    new = sq_sequence_read_new_last(self->seq, &last);
+
+    return Py_BuildValue("Oi", PyBool_FromLong(new), last);
+
+}
+
+static PyObject *Sequence_read_new_transpose(Sequence_Data *self, PyObject *args) {
+
+    int transp;
+    bool new;
+
+    new = sq_sequence_read_new_transpose(self->seq, &transp);
+
+    return Py_BuildValue("Oi", PyBool_FromLong(new), transp);
+
+}
+
+static PyObject *Sequence_read_new_clockdivide(Sequence_Data *self, PyObject *args) {
+
+    int clockdiv;
+    bool new;
+
+    new = sq_sequence_read_new_clockdivide(self->seq, &clockdiv);
+
+    return Py_BuildValue("Oi", PyBool_FromLong(new), clockdiv);
+
+}
+
+static PyObject *Sequence_read_new_mute(Sequence_Data *self, PyObject *args) {
+
+    bool mute;
+    bool new;
+
+    new = sq_sequence_read_new_mute(self->seq, &mute);
+
+    return Py_BuildValue("OO", PyBool_FromLong(new), PyBool_FromLong(mute));
+
+}
+
+static PyObject *Sequence_read_new_motion(Sequence_Data *self, PyObject *args) {
+
+    int motion;
+    bool new;
+
+    new = sq_sequence_read_new_motion(self->seq, &motion);
+
+    return Py_BuildValue("Oi", PyBool_FromLong(new), motion);
+
+}
+
 static PyMethodDef Sequence_methods[] = {
 
     {"set_outport", (PyCFunction) Sequence_set_outport, METH_VARARGS, NULL},
@@ -274,6 +340,12 @@ static PyMethodDef Sequence_methods[] = {
     {"pprint", (PyCFunction) Sequence_pprint, METH_NOARGS, NULL},
     {"set_notifications", (PyCFunction) Sequence_set_notifications, METH_VARARGS, NULL},
     {"read_new_playhead", (PyCFunction) Sequence_read_new_playhead, METH_VARARGS, NULL},
+    {"read_new_first", (PyCFunction) Sequence_read_new_first, METH_VARARGS, NULL},
+    {"read_new_last", (PyCFunction) Sequence_read_new_last, METH_VARARGS, NULL},
+    {"read_new_transpose", (PyCFunction) Sequence_read_new_transpose, METH_VARARGS, NULL},
+    {"read_new_clockdivide", (PyCFunction) Sequence_read_new_clockdivide, METH_VARARGS, NULL},
+    {"read_new_mute", (PyCFunction) Sequence_read_new_mute, METH_VARARGS, NULL},
+    {"read_new_motion", (PyCFunction) Sequence_read_new_motion, METH_VARARGS, NULL},
     {NULL}
 
 };
